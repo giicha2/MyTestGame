@@ -24,18 +24,24 @@ AMyTestGameCharacter::AMyTestGameCharacter()
 
 }
 
+void AMyTestGameCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	SpawnDefaultInventory();
+}
+
 void AMyTestGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyTestGameCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyTestGameCharacter::MoveRight);
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMyTestGameCharacter::Attack_Melee);
-
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMyBasicCharacter::Attack_Melee);
+	//PlayerInputComponent->BindAction("Attack", IE_Released, this, &AMyBasicCharacter::Attack_Melee_End);
 }
 
 void AMyTestGameCharacter::MoveForward(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f))
+	if ((Controller != NULL) && (value != 0.0f)&& !(isDuringAttack))
 	{
 		const FRotator Rot = Controller->GetControlRotation();
 		const FRotator YawRot(0, Rot.Yaw, 0);
@@ -47,7 +53,7 @@ void AMyTestGameCharacter::MoveForward(float value)
 
 void AMyTestGameCharacter::MoveRight(float value)
 {
-	if ((Controller != NULL) && (value != 0.0f))
+	if ((Controller != NULL) && (value != 0.0f) && !(isDuringAttack))
 	{
 		const FRotator Rot = Controller->GetControlRotation();
 		const FRotator YawRot(0, Rot.Yaw, 0);
@@ -56,7 +62,4 @@ void AMyTestGameCharacter::MoveRight(float value)
 	}
 }
 
-void AMyTestGameCharacter::Attack_Melee()
-{
-	PlayAnimMontage(Attack_Melee_AnimSet, 1.0f);
-}
+

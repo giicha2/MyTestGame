@@ -15,9 +15,32 @@ public:
 	// Sets default values for this character's properties
 	AMyBasicCharacter();
 
+	USkeletalMeshComponent* GetSpesificPawnMesh()const;
+
+	FName GetWeaponAttachPoint()const;
+
+	void EquipWeapon(class AMyTestWeapon* Weapon);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly,Category=Inventory)
+	FName WeaponAttachPoint;
+
+	TArray<class AMyTestWeapon*>Inventory;
+
+	class AMyTestWeapon* CurrentWeapon;
+	
+	void AddWeapon(class AMyTestWeapon* Weapon);
+
+	void SetCurrentWeapon(class AMyTestWeapon* NewWeapon, class AMyTestWeapon* LastWeapon);
+
+	void SpawnDefaultInventory();
+
+	UPROPERTY(EditDefaultsOnly,Category=Invetory)
+	TArray<TSubclassOf<class AMyTestWeapon>>DefaultInventoryClasses;
+
 
 public:	
 	// Called every frame
@@ -25,5 +48,19 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UPROPERTY(EditDefaultsOnly, Category = Pawn)
+		UAnimMontage* Attack_AnimMontage;
+
+	void Attack_Melee();
+	void Attack_Melee_End();
+	void ShowFX();
+
+
+	bool isDuringAttack = true;
+	int32 ComboAttack_Num;
+
+	UPROPERTY(EditDefaultsOnly,Category="MyFX")
+	UParticleSystem* HitFX;
 
 };
