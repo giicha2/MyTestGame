@@ -3,6 +3,8 @@
 
 #include "MyTestWeapon.h"
 #include "Components/BoxComponent.h"
+#include "Engine.h"
+//#include "UObject/ConstructorHelpers.h"
 
 
 // Sets default values
@@ -20,6 +22,9 @@ AMyTestWeapon::AMyTestWeapon(const class FObjectInitializer& ObjectInitializer):
 	WeaponCollision->SetBoxExtent(FVector(5.f, 5.f, 5.f));
 	WeaponCollision->AttachTo(WeaponMesh, "DamageSocket");
 
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>ParticleAsset(TEXT("ParticleSystem'/Game/StarterContent/Particles/P_Explosion.P_Explosion'"));
+	HitFX = ParticleAsset.Object;
 }
 
  
@@ -63,4 +68,17 @@ void AMyTestWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void AMyTestWeapon::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	if (OtherActor->IsA(AActor::StaticClass()) && MyPawn->isDuringAttack && OtherActor !=MyPawn)
+	{
+		UGameplayStatics::ApplyDamage(OtherActor, 30.f, NULL, this, UDamageType::StaticClass());
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "ApplyDamage!");
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetActorLocation());
+	}
+}
+
+
 

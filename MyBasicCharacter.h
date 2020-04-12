@@ -21,6 +21,12 @@ public:
 
 	void EquipWeapon(class AMyTestWeapon* Weapon);
 
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category=MyState)
+	float myHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyState)
+	float myMaxHealth;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,8 +44,15 @@ protected:
 
 	void SpawnDefaultInventory();
 
+	virtual void OnHit(float DamageTaken, struct FDamageEvent const& DamageEvent, class APawn* PawnInstigator, class AActor* DamageCauser);
+	
+	virtual void Die(float KillingDamage, struct FDamageEvent const& DamageEvent, AController* Killer, AActor* DamageCauser);
+
+	void DeathAnimationEnd();
+	
 	UPROPERTY(EditDefaultsOnly,Category=Invetory)
 	TArray<TSubclassOf<class AMyTestWeapon>>DefaultInventoryClasses;
+
 
 
 public:	
@@ -52,15 +65,24 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Pawn)
 		UAnimMontage* Attack_AnimMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category = Pawn)
+		UAnimMontage* BeHit_AnimMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Pawn)
+		UAnimMontage* Death_AnimMontage;
+
 	void Attack_Melee();
 	void Attack_Melee_End();
 	void ShowFX();
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)override;
+
 
 
 	bool isDuringAttack = true;
 	int32 ComboAttack_Num;
 
-	UPROPERTY(EditDefaultsOnly,Category="MyFX")
-	UParticleSystem* HitFX;
 
+	UPROPERTY(EditDefaultsOnly, Category = "MyFX")
+	UParticleSystem* HitFX;
 };
