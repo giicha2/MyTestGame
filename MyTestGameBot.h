@@ -13,5 +13,12 @@ UCLASS()
 class MYTESTGAME_API AMyTestGameBot : public AMyBasicCharacter
 {
 	GENERATED_BODY()
-	
+
+	UPROPERTY(EditAnywhere, Category = Behavior)
+		class UBehaviorTree* BotBehavior;
+
+	UPROPERTY(EditAnywhere, Category = Behavior)
+		UAnimMontage* Attack_Melee;
+
+
 };
