@@ -33,4 +33,8 @@ protected:
 	void MoveForward(float value);
 	void MoveRight(float value);
 
+private:
+	class UAIPerceptionStimuliSourceComponent* stimulus;
+	void setup_stimulus();
+
 };

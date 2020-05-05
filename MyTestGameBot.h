@@ -14,6 +14,9 @@ class MYTESTGAME_API AMyTestGameBot : public AMyBasicCharacter
 {
 	GENERATED_BODY()
 
+public:
+	AMyTestGameBot();
+
 	UPROPERTY(EditAnywhere, Category = Behavior)
 		class UBehaviorTree* BotBehavior;
 

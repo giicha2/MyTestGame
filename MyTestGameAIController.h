@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "MyTestGameAIController.generated.h"
 
 /**
@@ -12,7 +13,7 @@
 class UBehaviorTreeComponent;
 class UBlackboardComponent;
 
-UCLASS(config=Game)
+UCLASS()
 class  AMyTestGameAIController : public AAIController
 {
 	GENERATED_BODY()
@@ -23,50 +24,24 @@ public:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* Pawn)override;
 	virtual void Tick(float DeltaSeconds)override;
+
 	virtual FRotator GetControlRotation()const override;
 
-	UFUNCTION()
-	void OnPawnDetected(const TArray<AActor*> &DetectedPawns);
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category=AI)
-	float AISightRadius = 500.0f;
+	UFUNCTION(BlueprintCallable, Category = Behavior)
+		void on_target_detected(AActor* actor, FAIStimulus const stimulus);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	float AISightAge = 5.f;
+	class UBlackboardComponent* get_blackboard() const;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	float AILoseSightRadius = AISightRadius + 50.f;
+private:
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+		class UBehaviorTreeComponent* behavior_tree_Comp;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	float AIFieldOfView = 90.f;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	class UAISenseConfig_Sight* SightConfig;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-	bool bIsPlayerDetected = false;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AI)
-		float DistanceToPlayer = 0.0f;
-
-
-	class UBlackboradComponent* get_blackboard() const;
-
-//private:
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPriveteAccess = "true"))
-		class UBehaviorTreeComponent* behaviortree_Comp;
-
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPriveteAccess = "true"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 		class UBehaviorTree* btree;
 
-
 	class UBlackboardComponent* blackboard;
-	
+	class UAISenseConfig_Sight* sight_config;
 
-
-	//UPROPERTY(transient)
-	//	UBlackboardComponent* BlackboardComp;
-
-	//UPROPERTY(transient)
-	//	UBehaviorTreeComponent* BehaviorComp;
+	void setup_perception_system();
 };

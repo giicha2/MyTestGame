@@ -8,6 +8,8 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 
 AMyTestGameCharacter::AMyTestGameCharacter()
 {
@@ -22,6 +24,7 @@ AMyTestGameCharacter::AMyTestGameCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
+	setup_stimulus();
 }
 
 void AMyTestGameCharacter::PostInitializeComponents()
@@ -60,6 +63,13 @@ void AMyTestGameCharacter::MoveRight(float value)
 		const FVector Direction = FRotationMatrix(YawRot).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, value);
 	}
+}
+
+void AMyTestGameCharacter::setup_stimulus()
+{
+	stimulus=CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("stimulus"));
+	stimulus->RegisterForSense(TSubclassOf<UAISense_Sight>());
+	stimulus->RegisterWithPerceptionSystem();
 }
 
 

@@ -2,4 +2,9 @@
 
 
 #include "MyTestGameBot.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
+AMyTestGameBot::AMyTestGameBot()
+{
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+}

@@ -77,12 +77,12 @@ public:
 
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)override;
 
-
-
 	bool isDuringAttack = true;
 	int32 ComboAttack_Num;
 
-
 	UPROPERTY(EditDefaultsOnly, Category = "MyFX")
 	UParticleSystem* HitFX;
+
+
+
 };

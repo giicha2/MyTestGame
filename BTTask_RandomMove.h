@@ -20,10 +20,10 @@ class MYTESTGAME_API UBTTask_RandomMove : public UBTTask_BlackboardBase
 
 public:
 	UBTTask_RandomMove(FObjectInitializer const& object_initializer);
-	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& owner_Comp, uint8* NodeMemory);
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search", meta = (AllowPrivateAccess = "true"))
-	float search_radius = 3000.0f;
+	float search_radius = 1500.0f;
 	
 };

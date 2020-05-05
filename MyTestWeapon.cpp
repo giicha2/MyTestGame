@@ -74,7 +74,7 @@ void AMyTestWeapon::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (OtherActor->IsA(AActor::StaticClass()) && MyPawn->isDuringAttack && OtherActor !=MyPawn)
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, 30.f, NULL, this, UDamageType::StaticClass());
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "ApplyDamage!");
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "ApplyDamage!");
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetActorLocation());
 	}

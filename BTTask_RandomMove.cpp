@@ -11,32 +11,28 @@
 #include "MyTestGameAIController.h"
 #include "Engine.h"
 #include "Engine/World.h"
+#include "blackboard_keys.h"
 
 UBTTask_RandomMove::UBTTask_RandomMove(FObjectInitializer const& object_initializer)
 {
 	NodeName = TEXT("Find Random Location");
 }
 
-EBTNodeResult::Type UBTTask_RandomMove::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UBTTask_RandomMove::ExecuteTask(UBehaviorTreeComponent& owner_Comp, uint8* NodeMemory)
 {
-	UNavigationSystemV1* const NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
+	auto const cont = Cast<AMyTestGameAIController>(owner_Comp.GetAIOwner());
+	auto const npc = cont->GetPawn();
 
-	AMyTestGameAIController* MyController = Cast<AMyTestGameAIController>(OwnerComp.GetAIOwner());
+	FVector const origin = npc->GetActorLocation();
+	FNavLocation loc;
 
-	if (NavSys && MyController && MyController->GetPawn())
+	UNavigationSystemV1* const nav_sys = UNavigationSystemV1::GetCurrent(GetWorld());
+	if (nav_sys->GetRandomPointInNavigableRadius(origin, search_radius, loc, nullptr))
 	{
-		const float SearchRadius = 200.0f;
-		FNavLocation RandomPt;
-
-		const bool bFound = NavSys->GetRandomPointInNavigableRadius(MyController->GetPawn()->GetActorLocation(), SearchRadius, RandomPt);
-
-		if (bFound)
-		{
-			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>(GetSelectedBlackboardKey(), RandomPt.Location);
-
-			return EBTNodeResult::Succeeded;
-		}
+		cont->get_blackboard()->SetValueAsVector(bb_keys::target_location, loc.Location);
 	}
-	return EBTNodeResult::Failed;
+
+	FinishLatentTask(owner_Comp, EBTNodeResult::Succeeded);
+	return EBTNodeResult::Succeeded;
 }
 
